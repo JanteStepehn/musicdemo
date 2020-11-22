@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jante.music.dao.CollectMapper">
+    <resultMap id="BaseResultMap" type="com.jante.music.domain.Collect" >
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="user_id" jdbcType="INTEGER" property="userId"/>
+        <result column="type" jdbcType="TINYINT" property="type"/>
+        <result column="song_id" jdbcType="INTEGER" property="songId"/>
+        <result column="song_list_id" jdbcType="INTEGER" property="songListId"/>
+        <result column="content" jdbcType="VARCHAR" property="content"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="up" jdbcType="INTEGER" property="up"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.jante.music.domain.Collect">
+        insert into collect
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            id,
+            <if test="userId != null">
+                user_id,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+            <if test="songId != null">
+                song_id,
+            </if>
+            <if test="songListId != null">
+                song_list_id,
+            </if>
+            create_time,
+        </trim>
+        <trim prefix=" values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id},
+            </if>
+            <if test="userId != null">
+                #{userId},
+            </if>
+            <if test="type != null">
+                #{type},
+            </if>
+            <if test="songId != null">
+                #{songId},
+            </if>
+            <if test="songListId != null">
+                #{songListId},
+            </if>
+            now(),
+        </trim>
+
+    </insert>
+
+    <delete id="delete" parameterType="java.lang.Integer">
+        delete from collect where id = #{id}
+    </delete>
+    
+    <delete id="deleteByUserIdSongId" parameterType="java.lang.Integer">
+        delete from collect where user_id = #{userId} and song_id = #{songId}
+    </delete>
+
+    <select id="allCollect" resultMap="BaseResultMap">
+        select * from collect
+    </select>
+    
+    <select id="selectByUserId" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select *
+        from collect
+        where user_id = #{userId}
+    </select>
+
+    <select id="selectExist" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select *
+        from collect
+        where user_id = #{userId} and song_id = #{songId}
+    </select>
+</mapper>

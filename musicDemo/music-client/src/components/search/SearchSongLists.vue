@@ -1,0 +1,46 @@
+<template>
+    <div class="search-song-Lists">
+        <content-list :contentList="albumDatas"></content-list>
+    </div>
+</template>
+
+<script>
+import {mixin} from '../../mixins'
+import {selectByTitle} from '../../api/index'
+import ContentList from '../ContentList.vue'
+export default {
+    mixins: [mixin],
+    components: { 
+      ContentList 
+      },
+    name: 'search-song-lists',
+    data(){
+        return{
+            albumDatas: []
+        }
+    },
+    mounted(){
+        this.getSearchList();
+    },
+    methods:{
+        getSearchList(){
+            if(!this.$route.query.keywords){
+                this.notify('您输入的内容为空','warning');
+            }else{
+                selectByTitle(this.$route.query.keywords)
+                    .then(response => {
+                        if(response){
+                            this.albumDatas = response;
+                        }else{
+                            this.notify('暂无该歌曲内容','warning');
+                        }
+                    })
+            }
+        }
+    }
+}
+</script>
+
+<style lang="scss" scoped>
+@import '../../assets/css/search-song-Lists.scss';
+</style>
